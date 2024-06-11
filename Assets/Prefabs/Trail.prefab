@@ -93,7 +93,7 @@ TrailRenderer:
         outWeight: 0
       - serializedVersion: 3
         time: 0.17905778
-        value: 0.049998477
+        value: 0.1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -116,7 +116,7 @@ TrailRenderer:
       serializedVersion: 2
       key0: {r: 0.58017635, g: 1, b: 0, a: 1}
       key1: {r: 1, g: 1, b: 1, a: 1}
-      key2: {r: 0.9737315, g: 1, b: 0, a: 1}
+      key2: {r: 0.9737315, g: 1, b: 0, a: 0.1882353}
       key3: {r: 0.98039216, g: 0, b: 0.009905123, a: 0.30980393}
       key4: {r: 1, g: 0, b: 0, a: 0.30980393}
       key5: {r: 0, g: 0, b: 0, a: 0}
@@ -149,7 +149,7 @@ TrailRenderer:
     textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
-  m_MinVertexDistance: 0.1
+  m_MinVertexDistance: 0.2
   m_MaskInteraction: 0
   m_Autodestruct: 0
   m_Emitting: 1
