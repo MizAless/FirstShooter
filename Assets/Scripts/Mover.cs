@@ -1,14 +1,16 @@
 using UnityEngine;
-public class FirstPersonShooterController : MonoBehaviour {
+using UnityEngine.SceneManagement;
+public class Mover : MonoBehaviour {
     public float moveSpeed = 5f;
     public float sensitivity = 2f;
     public float jumpForce = 5f;
     public float gravity = -9.81f;
-    public float health = 100;
+    public float Health = 100;
     public Transform groundCheck;
     public LayerMask groundMask;
     public float verticalRotation = 0f;
     public Vector3 move;
+    public GameObject damageHUD;
     private CharacterController characterController;
     private Camera playerCamera;
     private float verticalVelocity = 0f;
@@ -37,5 +39,15 @@ public class FirstPersonShooterController : MonoBehaviour {
         verticalRotation = Mathf.Clamp(verticalRotation, -90f, 90f);
         playerCamera.transform.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
+    }
+    public void TakeDamage(int damage) {
+        Health -= damage;
+        Color newColor = damageHUD.GetComponent<UnityEngine.UI.Image>().color;
+        newColor.a = (100 - Health) * 0.01f;
+        damageHUD.GetComponent<UnityEngine.UI.Image>().color = newColor;
+        if (Health <= 0) {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            Cursor.lockState = CursorLockMode.Confined;
+        }
     }
 }

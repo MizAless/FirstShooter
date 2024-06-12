@@ -1,10 +1,11 @@
 using System.Collections;
 using UnityEngine;
 public class Shotgun : MonoBehaviour {
-    [SerializeField] private FirstPersonShooterController _mover;
+    [SerializeField] private Mover _mover;
     [SerializeField] private Transform firePoint;
     [SerializeField] private float spreadAngle = 0.15f;
     [SerializeField] private float damage = 10f;
+    [SerializeField] private int projectileCount = 15;
     [SerializeField] private float _shootCooldown = 0.8f;
     [SerializeField] private float _distance = 10f;
     [SerializeField] private TrailRenderer _trail;
@@ -33,10 +34,9 @@ public class Shotgun : MonoBehaviour {
         _muzzleFlash.Play();
         StartCoroutine(ShootProcess());
         StartCoroutine(ShootingAnimationProcess());
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < projectileCount; i++) {
             Vector3 spread = Camera.main.transform.forward + Random.insideUnitSphere * spreadAngle;
             Ray ray = new Ray(Camera.main.transform.position, spread);
-            //Debug.DrawLine(firePoint.position, Camera.main.transform.position + spread * 10f, Color.red, 0.1f);
             TrailRenderer newTrail = Instantiate(_trail, firePoint.position, Quaternion.identity);
             StartCoroutine(SpawnTrail(newTrail, Camera.main.transform.position + spread * 10f));
             if (Physics.Raycast(ray, out RaycastHit hit, _distance) && hit.collider.TryGetComponent<Enemy>(out Enemy enemy))

@@ -7,22 +7,21 @@ public class MusicSystem : MonoBehaviour
     [SerializeField] private GameObject _startMenu;
     [SerializeField] private Shotgun _shotgunScript;
     private bool isFight = true;
+    private bool isEnd = false;
     private void Awake(){
         Time.timeScale = 0f;
     }
     public void CloseMenu(){
         _startMenu.SetActive(false);
-        //StartCoroutine(SmoothChangeMusic(1));
         SetMusic(1);
         Cursor.lockState = CursorLockMode.Locked;
         Time.timeScale = 1f;
         _shotgunScript.enabled = true;
     }
     private void Update(){
+        if (isEnd) return;
         Collider[] colliders = Physics.OverlapSphere(_shotgunScript.transform.position, 20f);
-
         bool isEnemyNear = false;
-
         foreach (Collider collider in colliders){
             if (collider.TryGetComponent<Enemy>(out _))
                 isEnemyNear = true;
@@ -54,5 +53,9 @@ public class MusicSystem : MonoBehaviour
             _audioSource.volume = Mathf.Lerp(from, to, time / duration);
             yield return new WaitForFixedUpdate();
         }
+    }
+    public void SetEndMusic() {
+        isEnd = true;
+        StartCoroutine(SmoothChangeMusic(3));
     }
 }
