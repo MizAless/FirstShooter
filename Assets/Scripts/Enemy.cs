@@ -5,7 +5,6 @@ public class Enemy : MonoBehaviour {
     [SerializeField] private ParticleSystem _meetEffectPrefab;
     [SerializeField] private Mover player;
     [SerializeField] private Animator _animator;
-    [SerializeField] private float _attackDuration = 4.4f / 3f;
     [SerializeField] private Transform _firePoint;
     [SerializeField] private EnemyProjectile _enemyProjectile;
     [SerializeField] private float _attackForce;
@@ -31,9 +30,7 @@ public class Enemy : MonoBehaviour {
             _animator.SetBool("IsWalking", true);
             if (!IsAttack) StartCoroutine(Attacking());
         }
-        else {
-            _animator.SetBool("IsWalking", false);
-        }
+        else _animator.SetBool("IsWalking", false);
     }
     private IEnumerator Attacking() {
         IsAttack = true;
@@ -41,9 +38,9 @@ public class Enemy : MonoBehaviour {
         yield return new WaitForSeconds(0.5f);
         var projectile = Instantiate(_enemyProjectile, _firePoint.position, Quaternion.identity);
         projectile.GetComponent<Rigidbody>().AddForce((player.transform.position - _firePoint.transform.position).normalized * _attackForce, ForceMode.Impulse);
-        yield return new WaitForSeconds(_attackDuration - 0.5f);
+        yield return new WaitForSeconds(4.4f / 3f - 0.5f);
         _animator.SetBool(nameof(IsAttack), false);
-        yield return new WaitForSeconds(_shootCooldown - _attackDuration - 0.5f);
+        yield return new WaitForSeconds(_shootCooldown - 4.4f / 3f - 0.5f);
         IsAttack = false;   
     }
 }

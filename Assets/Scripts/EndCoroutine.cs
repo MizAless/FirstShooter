@@ -10,7 +10,7 @@ public class EndCoroutine : MonoBehaviour {
         float time = 0;
         while (time < 5) {
             time += Time.deltaTime;
-            Color newColor = _blackPanel.GetComponent<UnityEngine.UI.Image>().color;
+            Color newColor = Color.black;
             newColor.a = Mathf.Lerp(0, 1, time / 5f);
             _blackPanel.GetComponent<UnityEngine.UI.Image>().color = newColor;
             yield return null;

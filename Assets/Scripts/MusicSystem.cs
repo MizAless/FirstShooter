@@ -1,16 +1,16 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-public class MusicSystem : MonoBehaviour
-{
+public class MusicSystem : MonoBehaviour {
     [SerializeField] private AudioClip[] _musicParts;
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private GameObject _startMenu;
     [SerializeField] private Shotgun _shotgunScript;
+    [SerializeField] private List<Enemy> _enemyList;
     private bool isFight = true;
     private bool isEnd = false;
-    private void Awake(){
-        Time.timeScale = 0f;
-    }
+    private void Awake() => Time.timeScale = 0f;
     public void CloseMenu(){
         _startMenu.SetActive(false);
         SetMusic(1);
@@ -20,12 +20,9 @@ public class MusicSystem : MonoBehaviour
     }
     private void Update(){
         if (isEnd) return;
-        Collider[] colliders = Physics.OverlapSphere(_shotgunScript.transform.position, 20f);
         bool isEnemyNear = false;
-        foreach (Collider collider in colliders){
-            if (collider.TryGetComponent<Enemy>(out _))
-                isEnemyNear = true;
-        }
+        _enemyList.RemoveAll(enemy => enemy == null);
+        isEnemyNear = _enemyList.Any(enemy => Vector3.Distance(enemy.transform.position, _shotgunScript.transform.position) < 20f);
         if (!_startMenu.active)
             if (isEnemyNear && !isFight){
                 isFight = true;

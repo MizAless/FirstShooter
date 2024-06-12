@@ -2,18 +2,18 @@ using System.Collections;
 using UnityEngine;
 public class Shotgun : MonoBehaviour {
     [SerializeField] private Mover _mover;
-    [SerializeField] private Transform firePoint;
-    [SerializeField] private float spreadAngle = 0.15f;
-    [SerializeField] private float damage = 10f;
-    [SerializeField] private int projectileCount = 15;
+    [SerializeField] private Transform _firePoint;
+    [SerializeField] private float _spreadAngle = 0.15f;
+    [SerializeField] private float _damage = 10f;
+    [SerializeField] private int _projectileCount = 15;
     [SerializeField] private float _shootCooldown = 0.8f;
     [SerializeField] private float _distance = 10f;
     [SerializeField] private TrailRenderer _trail;
-    [SerializeField] private float recoilUpDuration = 0.2f;
-    [SerializeField] private float recoilDownDuration = 0.2f;
-    [SerializeField] private float recoilAngleUp = 5f;
-    [SerializeField] private float recoilAngleDown = 5f;
-    [SerializeField] private float recoilAngleSide = 2f;
+    [SerializeField] private float _recoilUpDuration = 0.2f;
+    [SerializeField] private float _recoilDownDuration = 0.2f;
+    [SerializeField] private float _recoilAngleUp = 5f;
+    [SerializeField] private float _recoilAngleDown = 5f;
+    [SerializeField] private float _recoilAngleSide = 2f;
     [SerializeField] private Animator _animator;
     [SerializeField] private AudioSource _shootSound;
     [SerializeField] private ParticleSystem _muzzleFlash;
@@ -22,9 +22,7 @@ public class Shotgun : MonoBehaviour {
     private bool IsWalking = false;
     private bool CanShoot = true;
     void Update() {
-        if (Input.GetButtonDown("Fire1")) {
-            Shoot();
-        }
+        if (Input.GetButtonDown("Fire1")) Shoot();
         IsWalking = _mover.move.x != 0 || _mover.move.z != 0;
         _animator.SetBool(nameof(IsShooting), IsShooting);
         _animator.SetBool(nameof(IsWalking), IsWalking);
@@ -34,20 +32,20 @@ public class Shotgun : MonoBehaviour {
         _muzzleFlash.Play();
         StartCoroutine(ShootProcess());
         StartCoroutine(ShootingAnimationProcess());
-        for (int i = 0; i < projectileCount; i++) {
-            Vector3 spread = Camera.main.transform.forward + Random.insideUnitSphere * spreadAngle;
+        for (int i = 0; i < _projectileCount; i++) {
+            Vector3 spread = Camera.main.transform.forward + Random.insideUnitSphere * _spreadAngle;
             Ray ray = new Ray(Camera.main.transform.position, spread);
-            TrailRenderer newTrail = Instantiate(_trail, firePoint.position, Quaternion.identity);
+            TrailRenderer newTrail = Instantiate(_trail, _firePoint.position, Quaternion.identity);
             StartCoroutine(SpawnTrail(newTrail, Camera.main.transform.position + spread * 10f));
             if (Physics.Raycast(ray, out RaycastHit hit, _distance) && hit.collider.TryGetComponent<Enemy>(out Enemy enemy))
-                enemy.Health -= (int)damage;
+                enemy.Health -= (int)_damage;
         }
         StartCoroutine(RecoilEffect());
     }
     private IEnumerator ShootProcess() {
         CanShoot = false;
         _shootSound.gameObject.SetActive(true);
-        _shootSound.transform.position = firePoint.position;
+        _shootSound.transform.position = _firePoint.position;
         yield return new WaitForSeconds(_shootCooldown);
         _shootSound.gameObject.SetActive(false);
         CanShoot = true;
@@ -70,18 +68,18 @@ public class Shotgun : MonoBehaviour {
     }
     private IEnumerator RecoilEffect() {
         float recoilTimer = 0f;
-        Vector3 recoilRotation = new Vector3(-recoilAngleUp, Random.Range(-recoilAngleSide, recoilAngleSide), 0f);
-        int iterations = (int)(recoilUpDuration / Time.fixedDeltaTime);
-        float deltaAngle = -recoilAngleUp / iterations;
-        while (recoilTimer < recoilUpDuration) {
+        Vector3 recoilRotation = new Vector3(-_recoilAngleUp, Random.Range(-_recoilAngleSide, _recoilAngleSide), 0f);
+        int iterations = (int)(_recoilUpDuration / Time.fixedDeltaTime);
+        float deltaAngle = -_recoilAngleUp / iterations;
+        while (recoilTimer < _recoilUpDuration) {
             recoilTimer += Time.fixedDeltaTime;
             _mover.verticalRotation += deltaAngle;
             yield return new WaitForFixedUpdate();
         }
         recoilTimer = 0;
-        iterations = (int)(recoilDownDuration / Time.fixedDeltaTime);
-        deltaAngle = recoilAngleDown / iterations;
-        while (recoilTimer < recoilDownDuration) {
+        iterations = (int)(_recoilDownDuration / Time.fixedDeltaTime);
+        deltaAngle = _recoilAngleDown / iterations;
+        while (recoilTimer < _recoilDownDuration) {
             recoilTimer += Time.fixedDeltaTime;
             _mover.verticalRotation += deltaAngle;
             yield return new WaitForFixedUpdate();
